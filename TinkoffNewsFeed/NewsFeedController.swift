@@ -12,13 +12,31 @@ import UIKit
 
 class NewsFeedController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
+    let service = NewsService()
+    var newsList: [NewsFeed] = []
+    
     let cellId = "cellId"
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupView()
+        
+//        let myNewsFeed = NewsFeed(title: "Сроки исполнения денежных переводов в период новогодних праздников для физических лиц", slug: "29122018-tinkoff-bank-money-transfers-during-new-year-holidays-for-individuals")
+        
+        service.getNews() { (newsList, error) in
+            if let error = error {
+                //TODO: handle error
+                print(error)
+            }
+            if let newsList = newsList {
+               self.newsList = newsList
+               self.collectionView.reloadData()
+            }
+        }
     }
+    
+
     
     
     func setupView() {
@@ -32,12 +50,14 @@ class NewsFeedController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return newsList.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let feedCell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! FeedCell
 //        setup cell
+        let newsFeed = newsList[indexPath.item]
+        feedCell.setupWithData(newsFeed)
         return feedCell
     }
     

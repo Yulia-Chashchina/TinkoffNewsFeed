@@ -9,6 +9,11 @@
 import UIKit
 
 class FeedCell: UICollectionViewCell {
+    
+    func setupWithData(_ newsFeed: NewsFeed) {
+        nameLabel.text = "\(newsFeed.title)"
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
