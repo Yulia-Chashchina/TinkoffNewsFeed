@@ -10,6 +10,11 @@ import UIKit
 
 class NewsDetailsCell: UITableViewCell {
     
+    func setupWithData(newsDetail: NewsDetail) {
+       nameLabel.text = "\(newsDetail.title)"
+        newsTextField.text = "\(newsDetail.text)"
+    }
+    
     let nameLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
@@ -21,9 +26,10 @@ class NewsDetailsCell: UITableViewCell {
     
     let newsTextField: UITextField = {
         let textField = UITextField()
+        
         textField.text = "Sample text"
         textField.font = UIFont.systemFont(ofSize: 14)
-        textField.isUserInteractionEnabled = false
+//        textField.isUserInteractionEnabled = false
         return textField
     }()
     

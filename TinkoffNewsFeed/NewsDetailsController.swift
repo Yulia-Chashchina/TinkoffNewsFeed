@@ -10,12 +10,28 @@ import UIKit
 
 class NewsDetailsController: UITableViewController {
     
+    let service = NewsService()
+    var newsDetail: NewsDetail?
+    
+    var slug = "29122018-tinkoff-bank-money-transfers-during-new-year-holidays-for-individuals"
+    
     let cellId = "cellId"
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupView()
+        
+        service.getNewsDetails(slug: slug){ (newsDetail, error) in
+            if let error = error {
+                //TODO: handle error
+                print(error)
+            }
+            if let newsDetail = newsDetail {
+                self.newsDetail = newsDetail
+                self.tableView.reloadData()
+            }
+        }
 
     }
     
@@ -39,7 +55,10 @@ class NewsDetailsController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! NewsDetailsCell
         cell.setupViews()
-
+        if let newsDetail = newsDetail {
+         cell.setupWithData(newsDetail: newsDetail)
+        }
+        
 //         Configure the cell...
 
         return cell

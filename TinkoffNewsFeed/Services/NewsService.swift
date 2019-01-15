@@ -13,7 +13,7 @@ class NewsService {
     func getNews(completion:(([NewsFeed]?, Error?) -> Void)?) {
         let path = "https://cfg.tinkoff.ru/news/public/api/platform/v1/getArticles"
         let url = URL(string: path)
-        let task = URLSession.shared.dataTask(with: url!) { (data, responce, requestError) in
+        let task = URLSession.shared.dataTask(with: url!) { (data, responce, Error) in
             do{
                 let articlesData = try JSONDecoder().decode(TinkoffNews.self, from: data!)
 //                print(articlesData.response.news[0].title)
@@ -38,7 +38,30 @@ class NewsService {
     }
         
     
-        
+    func getNewsDetails(slug: String, comletion:((NewsDetail?, Error?) -> Void)?) {
+        let path = "https://cfg.tinkoff.ru/news/public/api/platform/v1/getArticle?urlSlug=\(slug)"
+        let url = URL(string: path)
+        let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
+            
+            do {
+                let detailsData = try JSONDecoder().decode(TinkoffNewsDetails.self, from: data!)
+//                print(detailsData.response.title)
+                let newsDetail = detailsData.response
+                
+                DispatchQueue.main.async {
+                    comletion?(newsDetail, nil)
+                }
+                
+            } catch {
+                
+                DispatchQueue.main.async {
+                    comletion?(nil,error)
+                }
+                
+            }
+        }
+        task.resume()
+    }
 
     
     
