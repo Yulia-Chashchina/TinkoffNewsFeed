@@ -12,15 +12,18 @@ class NewsDetailsController: UITableViewController {
     
     let service = NewsService()
     var newsDetail: NewsDetail?
-    
-    var slug = "29122018-tinkoff-bank-money-transfers-during-new-year-holidays-for-individuals"
+    var slug: String?
     
     let cellId = "cellId"
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print (slug ?? "no parametr")
 
         setupView()
+        
+        guard let slug = slug else {return}
         
         service.getNewsDetails(slug: slug){ (newsDetail, error) in
             if let error = error {
@@ -34,6 +37,8 @@ class NewsDetailsController: UITableViewController {
         }
 
     }
+    
+    
     
     func setupView() {
         tableView.backgroundColor = UIColor.white

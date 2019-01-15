@@ -15,6 +15,8 @@ class NewsFeedController: UICollectionViewController, UICollectionViewDelegateFl
     let service = NewsService()
     var newsList: [NewsFeed] = []
     
+    var slug: String?
+    
     let cellId = "cellId"
 
     override func viewDidLoad() {
@@ -22,8 +24,7 @@ class NewsFeedController: UICollectionViewController, UICollectionViewDelegateFl
         
         setupView()
         
-//        let myNewsFeed = NewsFeed(title: "Сроки исполнения денежных переводов в период новогодних праздников для физических лиц", slug: "29122018-tinkoff-bank-money-transfers-during-new-year-holidays-for-individuals")
-        
+
         service.getNews() { (newsList, error) in
             if let error = error {
                 //TODO: handle error
@@ -66,7 +67,17 @@ class NewsFeedController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let indPath = indexPath
+        let article = newsList[indPath.item]
+        self.slug = article.slug
+        
         performSegue(withIdentifier: "newsSegue", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let newsDetailsVC = segue.destination as? NewsDetailsController {
+            newsDetailsVC.slug = self.slug
+        }
     }
 
 
