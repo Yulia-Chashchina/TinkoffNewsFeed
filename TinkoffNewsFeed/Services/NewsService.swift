@@ -12,10 +12,11 @@ class NewsService {
     
     func getNews(completion:(([NewsFeed]?, Error?) -> Void)?) {
         let path = "https://cfg.tinkoff.ru/news/public/api/platform/v1/getArticles"
-        let url = URL(string: path)
-        let task = URLSession.shared.dataTask(with: url!) { (data, responce, Error) in
+        guard let url = URL(string: path) else {return}
+        let task = URLSession.shared.dataTask(with: url) { (data, responce, Error) in
             do{
-                let articlesData = try JSONDecoder().decode(TinkoffNews.self, from: data!)
+                guard let data = data else {return}
+                let articlesData = try JSONDecoder().decode(TinkoffNews.self, from: data)
 //                print(articlesData.response.news[0].title)
                 
                 let newsList = articlesData.response.news
@@ -40,11 +41,12 @@ class NewsService {
     
     func getNewsDetails(slug: String, comletion:((NewsDetail?, Error?) -> Void)?) {
         let path = "https://cfg.tinkoff.ru/news/public/api/platform/v1/getArticle?urlSlug=\(slug)"
-        let url = URL(string: path)
-        let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
+        guard let url = URL(string: path) else {return}
+        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             
             do {
-                let detailsData = try JSONDecoder().decode(TinkoffNewsDetails.self, from: data!)
+                guard let data = data else {return}
+                let detailsData = try JSONDecoder().decode(TinkoffNewsDetails.self, from: data)
 //                print(detailsData.response.title)
                 let newsDetail = detailsData.response
                 
