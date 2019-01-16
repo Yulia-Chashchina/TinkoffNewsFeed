@@ -55,6 +55,17 @@ class NewsDetailsController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+
+    
+
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -63,7 +74,7 @@ class NewsDetailsController: UITableViewController {
         if let newsDetail = newsDetail {
          cell.setupWithData(newsDetail: newsDetail)
         }
-        
+       
 //         Configure the cell...
 
         return cell

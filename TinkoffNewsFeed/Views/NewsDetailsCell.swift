@@ -12,34 +12,58 @@ class NewsDetailsCell: UITableViewCell {
     
     func setupWithData(newsDetail: NewsDetail) {
        nameLabel.text = "\(newsDetail.title)"
-        newsTextField.text = "\(newsDetail.text)"
+       newsTextLabel.text = "\(newsDetail.text)".html2String
     }
     
     let nameLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
-        label.text = "Sample headline"
+        label.text = ""
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    let newsTextField: UITextField = {
-        let textField = UITextField()
-        
-        textField.text = "Sample text"
-        textField.font = UIFont.systemFont(ofSize: 14)
-//        textField.isUserInteractionEnabled = false
-        return textField
+    let newsTextLabel: UILabel = {
+        let textlabel = UILabel()
+        textlabel.numberOfLines = 0
+        textlabel.text = "Loading..."
+        textlabel.font = UIFont.systemFont(ofSize: 14)
+        textlabel.translatesAutoresizingMaskIntoConstraints = false
+        return textlabel
     }()
     
     func setupViews() {
         addSubview(nameLabel)
-        addSubview(newsTextField)
+        addSubview(newsTextLabel)
         
         addConstraintsWithFormat(format: "H:|-15-[v0]-15-|", views: nameLabel)
-        addConstraintsWithFormat(format: "V:|-20-[v0]-20-[v1]", views: nameLabel, newsTextField)
-        addConstraintsWithFormat(format: "H:|-10-[v0]-10-|", views: newsTextField)
+        addConstraintsWithFormat(format: "V:|-20-[v0]-20-[v1]-20-|", views: nameLabel, newsTextLabel)
+        addConstraintsWithFormat(format: "H:|-10-[v0]-10-|", views: newsTextLabel)
     }
     
+}
+
+
+extension Data {
+    var html2AttributedString: NSAttributedString? {
+        do {
+            return try NSAttributedString(data: self, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil)
+        } catch {
+            print("error:", error)
+            return  nil
+        }
+    }
+    var html2String: String {
+        return html2AttributedString?.string ?? ""
+    }
+}
+
+extension String {
+    var html2AttributedString: NSAttributedString? {
+        return Data(utf8).html2AttributedString
+    }
+    var html2String: String {
+        return html2AttributedString?.string ?? ""
+    }
 }
