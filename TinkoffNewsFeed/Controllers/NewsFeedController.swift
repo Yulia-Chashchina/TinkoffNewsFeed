@@ -14,6 +14,7 @@ class NewsFeedController: UICollectionViewController, UICollectionViewDelegateFl
     
     let service = NewsService()
     var newsList: [NewsFeed] = []
+    var refreshControl: UIRefreshControl = UIRefreshControl()
     
     var slug: String?
     
@@ -35,10 +36,40 @@ class NewsFeedController: UICollectionViewController, UICollectionViewDelegateFl
                self.collectionView.reloadData()
             }
         }
+        
+        setupRefreshControl()
+        
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offset = scrollView.contentOffset.y
+        if offset < -250 {
+            refreshControl.attributedTitle = NSAttributedString(string: "OK, YOU CAN LET GO NOW!", attributes: [NSAttributedString.Key.foregroundColor : refreshControl.tintColor])
+        } else {
+            refreshControl.attributedTitle = NSAttributedString(string: "loading...", attributes: [NSAttributedString.Key.foregroundColor : refreshControl.tintColor])
+        }
+//        if you delete the string below color will change, believe me you need it here
+        refreshControl.backgroundColor = UIColor.darkGray
+    }
+    
+    func setupRefreshControl() {
+        if #available(iOS 10.0, *) {
+            collectionView.refreshControl = refreshControl
+        } else {
+            collectionView.addSubview(refreshControl)
+        }
+        refreshControl.tintColor = UIColor.yellow
+        refreshControl.backgroundColor = UIColor.darkGray
+        refreshControl.attributedTitle = NSAttributedString(string: "loading...", attributes: [NSAttributedString.Key.foregroundColor : refreshControl.tintColor])
+        refreshControl.addTarget(self, action: #selector(NewsFeedController.refreshData), for: UIControl.Event.valueChanged)
+    }
+    
+    @objc func refreshData() {
+      collectionView.reloadData()
+      refreshControl.endRefreshing()
     }
     
 
-    
     
     func setupView() {
         navigationItem.title = "Tinkoff News Feed"
